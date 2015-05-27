@@ -14,13 +14,14 @@ import org.glassfish.jersey.linking.InjectLinks;
 
 import edu.upc.eetac.dsa.rubenpg.hobbylist.api.HobbylistRootAPIResource;
 import edu.upc.eetac.dsa.rubenpg.hobbylist.api.MediaType;
-import edu.upc.eetac.dsa.rubenpg.hobbylist.api.MovieResource;
+import edu.upc.eetac.dsa.rubenpg.hobbylist.api.HobbyResource;
  
 public class HobbylistRootAPI {
 	@InjectLinks({
             @InjectLink(resource = HobbylistRootAPIResource.class, style = Style.ABSOLUTE, rel = "self bookmark home", title = "Hobbylist Root API"),
-            @InjectLink(resource = MovieResource.class, style = Style.ABSOLUTE, rel = "collection", title = "Latest movies", type = MediaType.HOBBYLIST_API_MOVIE_COLLECTION),
-            @InjectLink(resource = MovieResource.class, style = Style.ABSOLUTE, rel = "create-movie", title = "Create new movie", type = MediaType.HOBBYLIST_API_MOVIE)})
+            @InjectLink(resource = HobbyResource.class, style = Style.ABSOLUTE, rel = "collection", title = "Latest hobbies", type = MediaType.HOBBYLIST_API_HOBBY_COLLECTION),
+            @InjectLink(resource = HobbyResource.class, style = Style.ABSOLUTE, rel = "create-hobby", title = "Create new movie", type = MediaType.HOBBYLIST_API_HOBBY)})
+          
     	private List<Link> links;
  
 	public List<Link> getLinks() {
