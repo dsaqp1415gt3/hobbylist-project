@@ -24,9 +24,10 @@ public class Hobby {
 	private String title;
 	private String genre;	
 	private String synopsis;
-	private String tag;
-	private String rank;
-	private String username;	
+	private String director;
+	private String author;
+	private String company;
+	private String year;	
 	private long creationTimestamp;
  
 	public int getHobbyid() {
@@ -69,30 +70,38 @@ public class Hobby {
 		this.synopsis = synopsis;
 	}
 	
-	public String getTag() {
-		return tag;
+	public String getDirector() {
+		return director;
 	}
- 
-	public void setTag(String tag) {
-		this.tag = tag;
+
+	public void setDirector(String director) {
+		this.director = director;
 	}
-	
-	public String getRank() {
-		return rank;
+
+	public String getAuthor() {
+		return author;
 	}
- 
-	public void setRank(String rank) {
-		this.rank = rank;
+
+	public void setAuthor(String author) {
+		this.author = author;
 	}
-	
-	public String getUsername() {
-		return username;
+
+	public String getCompany() {
+		return company;
 	}
- 
-	public void setUsername(String username) {
-		this.username = username;
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
- 
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
 	public long getCreationTimestamp() {
 		return creationTimestamp;
 	}

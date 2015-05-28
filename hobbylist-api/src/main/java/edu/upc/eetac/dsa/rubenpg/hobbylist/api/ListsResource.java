@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
@@ -24,9 +23,8 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.Hobby;
-import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.HobbyCollection;
 import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.Lista;
+import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.ListaCollection;
 
 @Path("/hobbies")
 public class ListsResource {
@@ -38,9 +36,9 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 	
 	@GET
 	@Path("/users/{username}")
-	@Produces(MediaType.HOBBYLIST_API_HOBBY_COLLECTION)
-	public HobbyCollection getHobbies(@PathParam("username") String username) {
-		HobbyCollection hobbies = new HobbyCollection();
+	@Produces(MediaType.HOBBYLIST_API_LISTA_COLLECTION)
+	public ListaCollection getLists(@PathParam("username") String username) {
+		ListaCollection lists = new ListaCollection();
 	 
 		Connection conn = null;
 		try {
@@ -57,16 +55,20 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 			
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				Hobby hobby = new Hobby();
-				hobby.setHobbyid(rs.getInt("hobbyid"));
-				hobby.setClassification(rs.getString("classification"));
-				hobby.setTitle(rs.getString("title"));
-				hobby.setSynopsis(rs.getString("synopsis"));
-				hobby.setGenre(rs.getString("genre"));
-				hobby.setTag(rs.getString("tag"));
-				hobby.setRank(rs.getString("rank"));
-				hobby.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
-				hobbies.addHobby(hobby);
+				Lista lista = new Lista();
+				lista.setHobbyid(rs.getInt("hobbyid"));
+				lista.setClassification(rs.getString("classification"));
+				lista.setTitle(rs.getString("title"));
+				lista.setSynopsis(rs.getString("synopsis"));
+				lista.setGenre(rs.getString("genre"));
+				lista.setDirector(rs.getString("director"));
+				lista.setAuthor(rs.getString("author"));
+				lista.setCompany(rs.getString("company"));
+				lista.setYear(rs.getString("year"));
+				lista.setTag(rs.getString("tag"));
+				lista.setRank(rs.getString("rank"));				;
+				lista.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
+				lists.addLista(lista);
 			}		
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
@@ -80,16 +82,16 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 			}
 		}
 	 
-		return hobbies;
+		return lists;
 	}
 	
 	private String GET_HOBBY_BY_USER_AND_ID_QUERY = "select * from hobbies h, lists l where l.listid=? AND h.hobbyid = l.hobbyid";
 	 
 	@GET
-	@Path("lista/{listid}")
-	@Produces(MediaType.HOBBYLIST_API_HOBBY)
-	public Hobby getHobbyinLista(@PathParam("listid") String listid,	@Context Request request) {
-		Hobby hobby = new Hobby();
+	@Path("/users/{username}/{listid}")
+	@Produces(MediaType.HOBBYLIST_API_LISTA)
+	public Lista getHobbyinLista(@PathParam("username") String username, @PathParam("listid") String listid,	@Context Request request) {
+		Lista lista = new Lista();
 		
 		Connection conn = null;
 		try {
@@ -106,14 +108,18 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 			
 			ResultSet rs = stmt.executeQuery();			
 			while (rs.next()) {
-				hobby.setHobbyid(rs.getInt("hobbyid"));
-				hobby.setClassification(rs.getString("classification"));
-				hobby.setTitle(rs.getString("title"));
-				hobby.setSynopsis(rs.getString("synopsis"));
-				hobby.setGenre(rs.getString("genre"));
-				hobby.setTag(rs.getString("tag"));
-				hobby.setRank(rs.getString("rank"));
-				hobby.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
+				lista.setHobbyid(rs.getInt("hobbyid"));
+				lista.setClassification(rs.getString("classification"));
+				lista.setTitle(rs.getString("title"));
+				lista.setSynopsis(rs.getString("synopsis"));
+				lista.setGenre(rs.getString("genre"));
+				lista.setDirector(rs.getString("director"));
+				lista.setAuthor(rs.getString("author"));
+				lista.setCompany(rs.getString("company"));
+				lista.setYear(rs.getString("year"));
+				lista.setTag(rs.getString("tag"));
+				lista.setRank(rs.getString("rank"));
+				lista.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
 			}		
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
@@ -127,7 +133,7 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 			}
 		}
 	 
-		return hobby;
+		return lista;
 	}
 
 	private String INSERT_HOBBY_IN_LIST_QUERY = "insert into lists (hobbyid, username, tag, rank) values (?, ?, ?, ?)";
@@ -220,7 +226,6 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 	@Consumes(MediaType.HOBBYLIST_API_LISTA)
 	@Produces(MediaType.HOBBYLIST_API_LISTA)
 	public Lista updateLista(@PathParam("listid") String listid, Lista lista) {
-		validateUser(listid);
 		validateUpdateLista(lista);
 		Connection conn = null;
 		try {
@@ -326,14 +331,6 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 		}
 	 
 		return lista;
-	}
-	
-	private void validateUser(String listid) {
-	    Lista lista = getListaFromDatabase(listid);
-	    String username = lista.getUsername();
-		if (!security.getUserPrincipal().getName().equals(username))
-			throw new ForbiddenException(
-					"You are not allowed to modify this list.");
 	}
 	
 	@Context

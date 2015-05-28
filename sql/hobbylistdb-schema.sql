@@ -23,7 +23,11 @@ create table hobbies (
 	title 					varchar(100) not null,	
 	synopsis				varchar(500) not null,
 	genre					varchar(20) not null,
-	/*imageurl				varchar(200) not null,*/
+	director				varchar(100),
+	author					varchar(100),
+	company					varchar(100),
+	year					varchar(20) not null,
+	imageurl				varchar(200) not null,
 	creation_timestamp		datetime not null default current_timestamp
 );
 
