@@ -32,12 +32,12 @@ public class ListsResource {
 	
 	//private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies where hobbyid = (select hobbyid from lists where username like ?)";
 	
-private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where h.hobbyid = l.hobbyid AND username like ?";
+	private String GET_HOBBY_BY_USER_AND_CLASSIFICATION_QUERY = "select * from hobbies h, lists l where h.hobbyid = l.hobbyid AND username like ? AND classification like ?";
 	
 	@GET
-	@Path("/users/{username}")
+	@Path("/users/{username}/{classification}")
 	@Produces(MediaType.HOBBYLIST_API_LISTA_COLLECTION)
-	public ListaCollection getLists(@PathParam("username") String username) {
+	public ListaCollection getLists(@PathParam("username") String username, @PathParam("classification") String classification) {
 		ListaCollection lists = new ListaCollection();
 	 
 		Connection conn = null;
@@ -50,8 +50,9 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 		
 		PreparedStatement stmt = null;
 		try {	
-			stmt = conn.prepareStatement(GET_HOBBY_BY_USER_QUERY);
+			stmt = conn.prepareStatement(GET_HOBBY_BY_USER_AND_CLASSIFICATION_QUERY);
 			stmt.setString(1, "%" + username + "%");
+			stmt.setString(2, "%" + classification + "%");
 			
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -183,12 +184,12 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 		return lista;
 	}
 	
-	/*private String DELETE_LIST_QUERY = "delete from lists where listid=?";
+	private String DELETE_LIST_QUERY = "delete from lists where listid=?";
 	 
 	@DELETE
-	@Path("/{listid}")
+	@Path("/lists/{listid}")
 	public void deleteLista(@PathParam("listid") String listid) {
-		validateUser(listid);
+		//validateUser(listid);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -217,7 +218,7 @@ private String GET_HOBBY_BY_USER_QUERY = "select * from hobbies h, lists l where
 			} catch (SQLException e) {
 			}
 		}
-	}*/
+	}
 	
 	private String UPDATE_LIST_QUERY = "update lists set hobbyid=ifnull(?, hobbyid), username=ifnull(?, username), tag=ifnull(?, tag), rank=ifnull(?, rank) where listid=?";
 	 

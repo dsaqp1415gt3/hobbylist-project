@@ -17,6 +17,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
@@ -177,7 +178,7 @@ private String GET_HOBBIES_QUERY = "select * from hobbies";
 		return hobby;
 	}
 	
-	private String GET_HOBBY_BY_GENRE_QUERY = "select * from hobbies where classification like ? AND genre like ?";
+	/*private String GET_HOBBY_BY_GENRE_QUERY = "select * from hobbies where classification like ? AND genre like ?";
 	 
 	@GET
 	@Path("/{classification}/{genre}")
@@ -198,6 +199,150 @@ private String GET_HOBBIES_QUERY = "select * from hobbies";
 			stmt = conn.prepareStatement(GET_HOBBY_BY_GENRE_QUERY);
 			stmt.setString(1, "%" + classification + "%");
 			stmt.setString(2, "%" + genre + "%");
+						
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Hobby hobby = new Hobby();
+				hobby.setHobbyid(rs.getInt("hobbyid"));
+				hobby.setClassification(rs.getString("classification"));
+				hobby.setTitle(rs.getString("title"));
+				hobby.setSynopsis(rs.getString("synopsis"));
+				hobby.setGenre(rs.getString("genre"));
+				hobby.setDirector(rs.getString("director"));
+				hobby.setAuthor(rs.getString("author"));
+				hobby.setCompany(rs.getString("company"));
+				hobby.setYear(rs.getString("year"));
+				hobby.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
+				hobbies.addHobby(hobby);
+			}		
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+	 
+		return hobbies;
+	}*/
+	
+	private String SEARCH_HOBBY_BY_CLASSIFICATION_QUERY = "select * from hobbies where classification like ?";
+	private String SEARCH_HOBBY_BY_GENRE_QUERY = "select * from hobbies where classification like ? AND genre like ?";
+	private String SEARCH_HOBBY_BY_DIRECTOR_QUERY = "select * from hobbies where classification like ? AND director like ?";
+	private String SEARCH_HOBBY_BY_AUTHOR_QUERY = "select * from hobbies where classification like ? AND author like ?";
+	private String SEARCH_HOBBY_BY_COMPANY_QUERY = "select * from hobbies where classification like ? AND company like ?";
+	private String SEARCH_HOBBY_BY_YEAR_QUERY = "select * from hobbies where classification like ? AND year like ?";
+	private String SEARCH_HOBBY_BY_GENRE_AND_DIRECTOR_QUERY = "select * from hobbies where classification like ? AND genre like ? AND director like ?";
+	private String SEARCH_HOBBY_BY_GENRE_AND_AUTHOR_QUERY = "select * from hobbies where classification like ? AND genre like ? AND author like ?";
+	private String SEARCH_HOBBY_BY_GENRE_AND_COMPANY_QUERY = "select * from hobbies where classification like ? AND genre like ? AND company like ?";
+	private String SEARCH_HOBBY_BY_GENRE_AND_YEAR_QUERY = "select * from hobbies where classification like ? AND genre like ? AND year like ?";
+	private String SEARCH_HOBBY_BY_GENRE_AND_DIRECTOR_AND_YEAR_QUERY = "select * from hobbies where classification like ? AND genre like ? AND director like ? AND year like ?";
+	private String SEARCH_HOBBY_BY_GENRE_AND_AUTHOR_AND_YEAR_QUERY = "select * from hobbies where classification like ? AND genre like ? AND author like ? AND year like ?";
+	private String SEARCH_HOBBY_BY_GENRE_AND_COMPANY_AND_YEAR_QUERY = "select * from hobbies where classification like ? AND genre like ? AND company like ? AND year like ?";
+	private String SEARCH_HOBBY_BY_DIRECTOR_AND_YEAR_QUERY = "select * from hobbies where classification like ? AND director like ? AND year like ?";
+	private String SEARCH_HOBBY_BY_AUTHOR_AND_YEAR_QUERY = "select * from hobbies where classification like ? AND author like ? AND year like ?";
+	private String SEARCH_HOBBY_BY_COMPANY_AND_YEAR_QUERY = "select * from hobbies where classification like ? AND company like ? AND year like ?";
+	
+	@GET
+	@Path("/search")
+	@Produces(MediaType.HOBBYLIST_API_HOBBY_COLLECTION)
+	public HobbyCollection getHobbiesbyGenre(@QueryParam("classification") String classification, @QueryParam("genre") String genre,
+			@QueryParam("director") String director, @QueryParam("author") String author, @QueryParam("company") String company,
+			@QueryParam("year") String year) {
+		HobbyCollection hobbies = new HobbyCollection();
+
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+		
+		PreparedStatement stmt = null;				
+		try {	
+			if (classification != null && genre == null && director == null && author == null && company == null && year == null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_CLASSIFICATION_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+			} else if (classification != null && genre != null && director == null && author == null && company == null && year == null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_GENRE_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + genre + "%");;
+			} else if (classification != null && genre == null && director != null && author == null && company == null && year == null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_DIRECTOR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + director + "%");
+			} else if (classification != null && genre == null && director == null && author != null && company == null && year == null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_AUTHOR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + author + "%");
+			} else if (classification != null && genre == null && director == null && author == null && company != null && year == null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_COMPANY_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + author + "%");
+			} else if (classification != null && genre == null && director == null && author == null && company == null && year != null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_YEAR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + year + "%");
+			} else if (classification != null && genre != null && director != null && author == null && company == null && year == null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_GENRE_AND_DIRECTOR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + genre + "%");
+				stmt.setString(3, "%" + director + "%");
+			} else if (classification != null && genre != null && director == null && author != null && company == null && year == null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_GENRE_AND_AUTHOR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + genre + "%");
+				stmt.setString(3, "%" + author + "%");
+			} else if (classification != null && genre != null && director == null && author == null && company != null && year == null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_GENRE_AND_COMPANY_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + genre + "%");
+				stmt.setString(3, "%" + company + "%");
+			} else if (classification != null && genre != null && director == null && author == null && company == null && year != null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_GENRE_AND_YEAR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + genre + "%");
+				stmt.setString(3, "%" + year + "%");
+			} else if (classification != null && genre != null && director != null && author == null && company == null && year != null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_GENRE_AND_DIRECTOR_AND_YEAR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + genre + "%");
+				stmt.setString(3, "%" + director + "%");
+				stmt.setString(4, "%" + year + "%");
+			} else if (classification != null && genre != null && director == null && author != null && company == null && year != null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_GENRE_AND_AUTHOR_AND_YEAR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + genre + "%");
+				stmt.setString(3, "%" + author + "%");
+				stmt.setString(4, "%" + year + "%");
+			} else if (classification != null && genre != null && director == null && author == null && company != null && year != null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_GENRE_AND_COMPANY_AND_YEAR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + genre + "%");
+				stmt.setString(3, "%" + company + "%");
+				stmt.setString(4, "%" + year + "%");
+			} else if (classification != null && genre == null && director != null && author == null && company == null && year != null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_DIRECTOR_AND_YEAR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + director + "%");
+				stmt.setString(3, "%" + year + "%");
+			} else if (classification != null && genre == null && director == null && author != null && company == null && year != null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_AUTHOR_AND_YEAR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + author + "%");
+				stmt.setString(3, "%" + year + "%");
+			} else if (classification != null && genre == null && director == null && author == null && company != null && year != null){
+				stmt = conn.prepareStatement(SEARCH_HOBBY_BY_COMPANY_AND_YEAR_QUERY);
+				stmt.setString(1, "%" + classification + "%");
+				stmt.setString(2, "%" + company + "%");
+				stmt.setString(3, "%" + year + "%");
+			} 
+			
 						
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
