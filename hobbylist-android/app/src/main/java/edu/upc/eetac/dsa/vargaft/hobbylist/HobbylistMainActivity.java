@@ -1,17 +1,39 @@
 package edu.upc.eetac.dsa.vargaft.hobbylist;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
-public class HobbylistMainActivity extends ActionBarActivity {
+public class HobbylistMainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hobbylist_main);
+    }
+
+    public void IrAMovies(View v){
+        Intent gomovies=new Intent(this,MovieActivity.class);
+        startActivity(gomovies);
+    }
+
+    public void IrABooks(View v){
+        Intent gobooks=new Intent(this,BookActivity.class);
+        startActivity(gobooks);
+    }
+
+    public void IrAGames(View v){
+        Intent gogames=new Intent(this,GameActivity.class);
+        startActivity(gogames);
+    }
+
+    public void IrAMessages(View v){
+        Intent gomessages=new Intent(this,MessageActivity.class);
+        startActivity(gomessages);
     }
 
     @Override

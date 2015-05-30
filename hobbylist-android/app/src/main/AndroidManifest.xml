@@ -16,6 +16,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MovieActivity"
+            android:label="@string/title_activity_movie" >
+        </activity>
+        <activity
+            android:name=".BookActivity"
+            android:label="@string/title_activity_books" >
+        </activity>
+        <activity
+            android:name=".GameActivity"
+            android:label="@string/title_activity_games" >
+        </activity>
+        <activity
+            android:name=".MessageActivity"
+            android:label="@string/title_activity_messages" >
+        </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
