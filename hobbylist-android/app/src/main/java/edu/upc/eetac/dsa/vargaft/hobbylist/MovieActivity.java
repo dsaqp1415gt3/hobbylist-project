@@ -2,13 +2,16 @@ package edu.upc.eetac.dsa.vargaft.hobbylist;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
@@ -28,22 +31,25 @@ public class MovieActivity extends ListActivity {
             "ligula", "vitae", "arcu", "aliquet", "mollis", "etiam", "vel",
             "erat", "placerat", "ante", "porttitor", "sodales", "pellentesque",
             "augue", "purus" };
-    private ArrayAdapter<String> adapter;
+    private ArrayList<Lista> listsList;
+    private MovieAdapter adapter;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
+
+        listsList = new ArrayList<Lista>();
+        adapter = new MovieAdapter(this, listsList);
+        setListAdapter(adapter);
+
         Authenticator.setDefault(new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication("ruben", "ruben"
                         .toCharArray());
             }
         });
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, items);
-        setListAdapter(adapter);
         (new FetchMoviesTask()).execute();
     }
 
@@ -64,10 +70,7 @@ public class MovieActivity extends ListActivity {
 
         @Override
         protected void onPostExecute(ListaCollection result) {
-            ArrayList<Lista> lists = new ArrayList<Lista>(result.getLists());
-            for (Lista s : lists) {
-                Log.d(TAG, s.getHobbyid() + "-" + s.getTitle());
-            }
+            addMovies(result);
             if (pd != null) {
                 pd.dismiss();
             }
@@ -81,5 +84,20 @@ public class MovieActivity extends ListActivity {
             pd.setIndeterminate(true);
             pd.show();
         }
+    }
+
+    private void addMovies(ListaCollection lists){
+        listsList.addAll(lists.getLists());
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Lista lista = listsList.get(position);
+        Log.d(TAG, lista.getLinks().get("self").getTarget());
+
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra("url", lista.getLinks().get("self").getTarget());
+        startActivity(intent);
     }
 }

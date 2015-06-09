@@ -17,11 +17,13 @@ public class Lista {
     private String author;
     private String company;
     private String year;
+    private String imageurl;
     private String tag;
     private String rank;
     private String username;
     private long creationTimestamp;
     private Map<String, Link> links = new HashMap<String, Link>();
+    private String eTag;
 
     public int getListid() {
         return listid;
@@ -103,6 +105,14 @@ public class Lista {
         this.year = year;
     }
 
+    public String getImageurl() {
+        return imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
+    }
+
     public String getTag() {
         return tag;
     }
@@ -137,5 +147,13 @@ public class Lista {
 
     public Map<String, Link> getLinks() {
         return links;
+    }
+
+    public String getETag() {
+        return eTag;
+    }
+
+    public void setETag(String ETag) {
+        this.eTag = ETag;
     }
 }

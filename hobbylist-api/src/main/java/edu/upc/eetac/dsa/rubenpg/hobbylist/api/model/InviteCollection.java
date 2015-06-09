@@ -5,26 +5,26 @@ import java.util.List;
 
 import javax.ws.rs.core.Link;
 
-public class HobbyCollection {
+public class InviteCollection {
 	
 	private List<Link> links;
-	private List<Hobby> hobbies;
-	 
-	public HobbyCollection() {
+	private List<Invite> invites;
+
+	public InviteCollection() {
 		super();
-		hobbies = new ArrayList<>();
+		invites = new ArrayList<>();
 	}
  
-	public List<Hobby> getHobbies() {
-		return hobbies;
+	public List<Invite> getInvites() {
+		return invites;
 	}
  
-	public void setHobbies(List<Hobby> hobbies) {
-		this.hobbies = hobbies;
+	public void setInvites(List<Invite> invites) {
+		this.invites = invites;
 	}
  
-	public void addHobby(Hobby hobby) {
-		hobbies.add(hobby);
+	public void addInvite(Invite invite) {
+		invites.add(invite);
 	}
 	
 	public List<Link> getLinks() {
@@ -34,5 +34,4 @@ public class HobbyCollection {
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
-
 }

@@ -5,35 +5,34 @@ import java.util.List;
 
 import javax.ws.rs.core.Link;
 
-public class ListaCollection {
+public class GameCollection {
 	
 	private List<Link> links;
-	private List<Lista> lists;
+	private List<Game> games;
 	 
-	public ListaCollection() {
+	public GameCollection() {
 		super();
-		lists = new ArrayList<>();
+		games = new ArrayList<>();
+	}
+ 
+	public List<Game> getGames() {
+		return games;
+	}
+ 
+	public void setGames(List<Game> games) {
+		this.games = games;
+	}
+ 
+	public void addGame(Game game) {
+		games.add(game);
 	}
 	
-
-	public List<Lista> getLists() {
-		return lists;
-	}
-
-	public void setLists(List<Lista> lists) {
-		this.lists = lists;
-	}
-	
-	public void addLista(Lista lista) {
-		lists.add(lista);
-	}
-
 	public List<Link> getLinks() {
 		return links;
 	}
-
+ 
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
-	
+
 }

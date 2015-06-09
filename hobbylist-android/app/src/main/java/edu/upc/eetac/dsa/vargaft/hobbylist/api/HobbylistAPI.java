@@ -12,7 +12,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -38,7 +40,7 @@ public class HobbylistAPI {
         Log.d("LINKS", url.toString());
         getRootAPI();
     }
-//FALLA AQUÍ!!!
+
     public final static HobbylistAPI getInstance(Context context) throws AppException {
         if (instance == null)
             try {
@@ -129,6 +131,7 @@ public class HobbylistAPI {
                 lista.setAuthor(jsonLista.getString("author"));
                 lista.setCompany(jsonLista.getString("company"));
                 lista.setYear(jsonLista.getString("year"));
+                lista.setImageurl(jsonLista.getString("imageurl"));
                 lista.setTag(jsonLista.getString("tag"));
                 lista.setRank(jsonLista.getString("rank"));
                 jsonLinks = jsonLista.getJSONArray("links");
@@ -160,5 +163,67 @@ public class HobbylistAPI {
             for (String s : rels)
                 map.put(s, link);
         }
+    }
+
+    private Map<String, Lista> listsCache = new HashMap<String, Lista>();
+
+    public Lista getLista(String urlLista) throws AppException {
+        Lista lista = null;
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL(urlLista);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+
+            lista = listsCache.get(urlLista);
+            String eTag = (lista == null) ? null : lista.getETag();
+            if (eTag != null)
+                urlConnection.setRequestProperty("If-None-Match", eTag);
+            urlConnection.connect();
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
+                Log.d(TAG, "CACHE");
+                return listsCache.get(urlLista);
+            }
+            Log.d(TAG, "NOT IN CACHE");
+            lista = new Lista();
+            eTag = urlConnection.getHeaderField("ETag");
+            lista.setETag(eTag);
+            listsCache.put(urlLista, lista);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    urlConnection.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            JSONObject jsonLista = new JSONObject(sb.toString());
+            lista.setHobbyid(jsonLista.getInt("hobbyid"));
+            lista.setClassification(jsonLista.getString("classification"));
+            lista.setTitle(jsonLista.getString("title"));
+            lista.setSynopsis(jsonLista.getString("synopsis"));
+            lista.setGenre(jsonLista.getString("genre"));
+            lista.setDirector(jsonLista.getString("director"));
+            lista.setAuthor(jsonLista.getString("author"));
+            lista.setCompany(jsonLista.getString("company"));
+            lista.setYear(jsonLista.getString("year"));
+            lista.setImageurl(jsonLista.getString("imageurl"));
+            lista.setTag(jsonLista.getString("tag"));
+            lista.setRank(jsonLista.getString("rank"));
+            JSONArray jsonLinks = jsonLista.getJSONArray("links");
+            parseLinks(jsonLinks, lista.getLinks());
+        } catch (MalformedURLException e) {
+            Log.e(TAG, e.getMessage(), e);
+            throw new AppException("Bad sting url");
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage(), e);
+            throw new AppException("Exception when getting the sting");
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage(), e);
+            throw new AppException("Exception parsing response");
+        }
+
+        return lista;
     }
 }
