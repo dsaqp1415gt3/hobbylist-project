@@ -4,14 +4,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.DataSource;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.Game;
 import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.GameCollection;
@@ -21,7 +31,8 @@ import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.GameCollection;
 public class GameResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
-	private String GET_GAMES_QUERY = "select * from games order by creation_timestamp";
+	//private String GET_GAMES_QUERY = "select * from games order by creation_timestamp";
+	private String GET_GAMES_QUERY = "select games.gameid, games.username, games.title, games.synopsis, games.company, games.year, games.imageurl, games.creation_timestamp, genre.genrename from games inner join genre on games.genreid=genre.genreid";
 	@GET
 	@Produces(MediaType.HOBBYLIST_API_GAME_COLLECTION)
 	public GameCollection getGames() {
@@ -38,6 +49,7 @@ public class GameResource {
 		PreparedStatement stmt = null;
 		try {	
 			stmt = conn.prepareStatement(GET_GAMES_QUERY);
+			//stmt2 = conn.prepareStatement(GET)
 			
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -46,7 +58,7 @@ public class GameResource {
 				game.setUsername(rs.getString("username"));
 				game.setTitle(rs.getString("title"));
 				game.setSynopsis(rs.getString("synopsis"));
-				game.setGenreid(rs.getInt("genreid"));
+				game.setGenrename(rs.getString("genrename"));
 				game.setCompany(rs.getString("company"));
 				game.setYear(rs.getString("year"));
 				game.setImageurl(rs.getString("imageurl"));
@@ -67,8 +79,8 @@ public class GameResource {
 	 
 		return games;
 	}
-	
-	private String GET_GAME_BY_ID_QUERY = "select * from games where gameid=?";
+
+	private String GET_GAME_BY_ID_QUERY = "select games.gameid, games.username, games.title, games.synopsis, games.company, games.year, games.imageurl, games.creation_timestamp, genre.genrename from games inner join genre on games.genreid=genre.genreid where games.gameid=?";
 	 
 	@GET
 	@Path("/{gameid}")
@@ -95,7 +107,7 @@ public class GameResource {
 				game.setUsername(rs.getString("username"));
 				game.setTitle(rs.getString("title"));
 				game.setSynopsis(rs.getString("synopsis"));
-				game.setGenreid(rs.getInt("genreid"));
+				game.setGenrename(rs.getString("genrename"));
 				game.setCompany(rs.getString("company"));
 				game.setYear(rs.getString("year"));
 				game.setImageurl(rs.getString("imageurl"));
@@ -116,7 +128,7 @@ public class GameResource {
 		return game;
 	}
 	
-	private String GET_GAME_BY_TITLE_QUERY = "select * from games where title like ?";
+	private String GET_GAME_BY_TITLE_QUERY = "select games.gameid, games.username, games.title, games.synopsis, games.company, games.year, games.imageurl, games.creation_timestamp, genre.genrename from games inner join genre on games.genreid=genre.genreid where title like ?";
 	 
 	@GET
 	@Path("/title/{title}")
@@ -144,7 +156,7 @@ public class GameResource {
 				game.setUsername(rs.getString("username"));
 				game.setTitle(rs.getString("title"));
 				game.setSynopsis(rs.getString("synopsis"));
-				game.setGenreid(rs.getInt("genreid"));
+				game.setGenrename(rs.getString("genrename"));
 				game.setCompany(rs.getString("company"));
 				game.setYear(rs.getString("year"));
 				game.setImageurl(rs.getString("imageurl"));
@@ -166,7 +178,7 @@ public class GameResource {
 		return games;
 	}
 	
-	private String GET_GAME_BY_GENRE_QUERY = "select * from games h, genre g where h.genreid = g.genreid AND genrename like ?";
+	private String GET_GAME_BY_GENRE_QUERY = "select games.gameid, games.username, games.title, games.synopsis, games.company, games.year, games.imageurl, games.creation_timestamp, genre.genrename from games inner join genre on games.genreid=genre.genreid where genrename like ?";
 	
 	@GET
 	@Path("/genre/{genrename}")
@@ -194,7 +206,7 @@ public class GameResource {
 				game.setUsername(rs.getString("username"));
 				game.setTitle(rs.getString("title"));
 				game.setSynopsis(rs.getString("synopsis"));
-				game.setGenreid(rs.getInt("genreid"));
+				game.setGenrename(rs.getString("genrename"));
 				game.setCompany(rs.getString("company"));
 				game.setYear(rs.getString("year"));
 				game.setImageurl(rs.getString("imageurl"));			;
@@ -233,7 +245,8 @@ public class GameResource {
 		
 		PreparedStatement stmt = null;
 		try {
-			stmt = conn.prepareStatement("select * from games where gameid IN " + "(select gameid from platformsgames where platformid = "
+			stmt = conn.prepareStatement("select games.gameid, games.username, games.title, games.synopsis, games.company, games.year, games.imageurl, games.creation_timestamp, genre.genrename from games inner join genre on games.genreid=genre.genreid where gameid IN " 
+					+ "(select gameid from platformsgames where platformid = "
 					+ "(select platformid from platforms where platformname = ?)) order by creation_timestamp");
 			stmt.setString(1, platformname);
 			stmt.executeQuery();
@@ -245,7 +258,7 @@ public class GameResource {
 				game.setUsername(rs.getString("username"));
 				game.setTitle(rs.getString("title"));
 				game.setSynopsis(rs.getString("synopsis"));
-				game.setGenreid(rs.getInt("genreid"));
+				game.setGenrename(rs.getString("genrename"));
 				game.setCompany(rs.getString("company"));
 				game.setYear(rs.getString("year"));
 				game.setImageurl(rs.getString("imageurl"));			;
@@ -265,11 +278,8 @@ public class GameResource {
 		}
 		return games;
 	}
-	/*
 	
 	private String INSERT_GAME_QUERY = "insert into games (username, title, synopsis, genreid, platformid, company, year, imageurl) values (?, ?, ?, ?, ?, ?, ?, ?)";
-	//FALTA ESTO
-	//private String INSERT_GAME_INTO_PLATFORM_QUERY  = "insert into platformsgames values (?," + "(select platformid from platforms where platformname like ?))";
 	@POST
 	@Consumes(MediaType.HOBBYLIST_API_GAME)
 	@Produces(MediaType.HOBBYLIST_API_GAME)
@@ -284,7 +294,6 @@ public class GameResource {
 		}
 	 
 		PreparedStatement stmt = null;
-		//PreparedStatement stmt2 = null;
 		try {
 			stmt = conn.prepareStatement(INSERT_GAME_QUERY,Statement.RETURN_GENERATED_KEYS);	 
 			stmt.setString(1, security.getUserPrincipal().getName());
@@ -296,8 +305,6 @@ public class GameResource {
 			stmt.setString(7, game.getImageurl());
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
-			
-			//stmt2 = conn.prepareStatement(INSERT_GAME_INTO_PLATFORM_QUERY);
 			
 			if (rs.next()) {
 				int gameid = rs.getInt(1);
@@ -326,6 +333,7 @@ public class GameResource {
 	@DELETE
 	@Path("/{gameid}")
 	public void deleteGame(@PathParam("gameid") String gameid) {
+		validateUser(gameid);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -364,6 +372,7 @@ public class GameResource {
 	@Produces(MediaType.HOBBYLIST_API_GAME)
 	public Game updateGame(@PathParam("gameid") String gameid, Game game) {
 		validateUpdateGame(game);
+		validateUser(gameid);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -375,7 +384,7 @@ public class GameResource {
 		PreparedStatement stmt = null;
 		try {
 			stmt = conn.prepareStatement(UPDATE_GAME_QUERY);
-			stmt.setString(1, game.getUsername());
+			stmt.setString(1, security.getUserPrincipal().getName());
 			stmt.setString(2, game.getTitle());
 			stmt.setString(3, game.getSynopsis());
 			stmt.setInt(4, game.getGenreid());
@@ -470,7 +479,7 @@ public class GameResource {
 				game.setUsername(rs.getString("username"));
 				game.setTitle(rs.getString("title"));
 				game.setSynopsis(rs.getString("synopsis"));
-				game.setGenreid(rs.getInt("genreid"));
+				game.setGenrename(rs.getString("genrename"));
 				game.setCompany(rs.getString("company"));
 				game.setYear(rs.getString("year"));
 				game.setImageurl(rs.getString("imageurl"));
@@ -493,7 +502,15 @@ public class GameResource {
 		return game;
 	}
 	
+	private void validateUser(String gameid) {
+	    Game game = getGameFromDatabase(gameid);
+	    String username = game.getUsername();
+		if (!security.getUserPrincipal().getName().equals(username))
+			throw new ForbiddenException(
+					"You are not allowed to modify this game.");
+	}
+	
 	@Context
 	private SecurityContext security;
-*/
+
 }

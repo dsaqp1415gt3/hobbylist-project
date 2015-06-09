@@ -30,7 +30,7 @@ import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.FavCollection;
 public class FavsResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
-	private String GET_FAVS_BY_USER_QUERY = "select * from games h, favs l where h.gameid = l.gameid AND username like ?";
+	private String GET_FAVS_BY_USER_QUERY = "select * from games h, favs l where h.gameid = l.gameid AND l.username like ?";
 	
 	@GET
 	@Path("/users/{username}")
@@ -86,7 +86,7 @@ public class FavsResource {
 	@GET
 	@Path("/{favid}")
 	@Produces(MediaType.HOBBYLIST_API_FAVS)
-	public Fav getGameinFav(@PathParam("favid") String favid) {
+	public Fav getFav(@PathParam("favid") String favid) {
 		Fav fav = new Fav();
 		
 		Connection conn = null;

@@ -4,7 +4,18 @@ import java.util.List;
 
 import javax.ws.rs.core.Link;
 
+import org.glassfish.jersey.linking.Binding;
+import org.glassfish.jersey.linking.InjectLink;
+import org.glassfish.jersey.linking.InjectLinks;
+import org.glassfish.jersey.linking.InjectLink.Style;
+
+import edu.upc.eetac.dsa.rubenpg.hobbylist.api.InviteResource;
+import edu.upc.eetac.dsa.rubenpg.hobbylist.api.MediaType;
+
 public class Invite {
+	@InjectLinks({
+		@InjectLink(resource = InviteResource.class, style = Style.ABSOLUTE, rel = "invites", title = "Latest invites", type = MediaType.HOBBYLIST_API_INVITE_COLLECTION),
+		@InjectLink(resource = InviteResource.class, style = Style.ABSOLUTE, rel = "self edit", title = "Invite", type = MediaType.HOBBYLIST_API_INVITE, method = "getInvite", bindings = @Binding(name = "invid", value = "${instance.invid}")) })
 	private List<Link> links;
 	private int invid;
 	private String sender;

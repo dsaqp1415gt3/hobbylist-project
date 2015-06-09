@@ -12,6 +12,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -164,6 +165,49 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		return invite;
 	}
 	
+	private String UPDATE_INVITE_QUERY = "update invites set stateid=ifnull(?, statid)";
+	 
+	@PUT
+	@Path("/{invid}")
+	@Consumes(MediaType.HOBBYLIST_API_INVITE)
+	@Produces(MediaType.HOBBYLIST_API_INVITE)
+	public Invite updateInvite(@PathParam("invid") String invid, Invite invite) {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+	 
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(UPDATE_INVITE_QUERY);
+			stmt.setInt(1, invite.getStateid());
+			stmt.setInt(2, Integer.valueOf(invid));
+	 
+			int rows = stmt.executeUpdate();
+			if (rows == 1)
+				invite = getInviteFromDatabase(invid);
+			else {
+				throw new NotFoundException("There's no invite with invid=" + invid);
+			}
+	 
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+	 
+		return invite;
+	}
+	
 	private void validateInvite(Invite invite) {
 		if (invite.getSender() == null)
 			throw new BadRequestException("Sender can't be null.");
@@ -214,4 +258,5 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	 
 		return invite;
 	}
+	
 }

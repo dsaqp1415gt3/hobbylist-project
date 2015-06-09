@@ -28,8 +28,8 @@ insert into games (username, title, synopsis, genreid, company, year, imageurl) 
 insert into games (username, title, synopsis, genreid, company, year, imageurl) values ('ruben', 'Star Ocean 4', 'El mejor RPG de la anterior generación',3,'TriAce','2009','https://upload.wikimedia.org/wikipedia/ru/8/88/Star_Ocean_The_Last_Hope_PS3_Cover.jpg');
 insert into games (username, title, synopsis, genreid, company, year, imageurl) values ('ruben', 'Final Fantasy XV', 'No se de que va porque no ha salido y nunca lo hara',3,'SquareEnix','2020','http://i1063.photobucket.com/albums/t520/jamesrob12/ff15boxps4_zps87bec7c0.jpg');
 insert into games (username, title, synopsis, genreid, company, year, imageurl) values ('ruben', 'Metal Gear 4', 'Tiros y sigilo, en ese orden, como los pros',3,'Konami','2008','http://i11c.3djuegos.com/juegos/1421/metal_gear_solid_4_guns_of_the_patriots/fotos/ficha/metal_gear_solid_4_guns_of_the_patriots-1686810.jpg');
-insert into games (username, title, synopsis, genreid, company, year, imageurl) values ('marc', 'Kirby', 'Kirby se come lo que sea y consigue sus poderes',2,'Nintendo','1992','https://pbs.twimg.com/media/B2Phpd6CAAAhaf5.png');
-insert into games (username, title, synopsis, genreid, company, year, imageurl) values ('marc', 'Borderlands', 'Recorre Pandora completando misiones y disparando a todo lo que se mueva',1,'Gearbox','2009','http://upload.wikimedia.org/wikipedia/en/0/01/Borderlandscover.jpg');
+insert into games (username, title, synopsis, genreid, company, year, imageurl) values ('ruben', 'Kirby', 'Kirby se come lo que sea y consigue sus poderes',2,'Nintendo','1992','https://pbs.twimg.com/media/B2Phpd6CAAAhaf5.png');
+insert into games (username, title, synopsis, genreid, company, year, imageurl) values ('ruben', 'Borderlands', 'Recorre Pandora completando misiones y disparando a todo lo que se mueva',1,'Gearbox','2009','http://upload.wikimedia.org/wikipedia/en/0/01/Borderlandscover.jpg');
 
 insert into platformsgames values (1,3);
 insert into platformsgames values (2,1);

@@ -3,8 +3,19 @@ package edu.upc.eetac.dsa.rubenpg.hobbylist.api.model;
 import java.util.List;
 
 import javax.ws.rs.core.Link;
+
+import org.glassfish.jersey.linking.Binding;
+import org.glassfish.jersey.linking.InjectLink;
+import org.glassfish.jersey.linking.InjectLinks;
+import org.glassfish.jersey.linking.InjectLink.Style;
+
+import edu.upc.eetac.dsa.rubenpg.hobbylist.api.GameResource;
+import edu.upc.eetac.dsa.rubenpg.hobbylist.api.MediaType;
  
 public class Game {
+	@InjectLinks({
+		@InjectLink(resource = GameResource.class, style = Style.ABSOLUTE, rel = "games", title = "Latest games", type = MediaType.HOBBYLIST_API_GAME_COLLECTION),
+		@InjectLink(resource = GameResource.class, style = Style.ABSOLUTE, rel = "self edit", title = "Game", type = MediaType.HOBBYLIST_API_GAME, method = "getGame", bindings = @Binding(name = "gameid", value = "${instance.gameid}")) })
 	private List<Link> links;
 	private int gameid;
 	private String username;

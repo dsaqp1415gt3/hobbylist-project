@@ -9,13 +9,13 @@ import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
 import org.glassfish.jersey.linking.InjectLink.Style;
 
-import edu.upc.eetac.dsa.rubenpg.hobbylist.api.GameResource;
+import edu.upc.eetac.dsa.rubenpg.hobbylist.api.FavsResource;
 import edu.upc.eetac.dsa.rubenpg.hobbylist.api.MediaType;
 
 public class Fav {
 	@InjectLinks({
-		@InjectLink(resource = GameResource.class, style = Style.ABSOLUTE, rel = "favs", title = "Latest favs", type = MediaType.HOBBYLIST_API_FAVS_COLLECTION),
-		@InjectLink(resource = GameResource.class, style = Style.ABSOLUTE, rel = "self edit", title = "Fav", type = MediaType.HOBBYLIST_API_FAVS, method = "getGameinFav", bindings = @Binding(name = "favid", value = "${instance.favid}")) })
+		@InjectLink(resource = FavsResource.class, style = Style.ABSOLUTE, rel = "favs", title = "Latest favs", type = MediaType.HOBBYLIST_API_FAVS_COLLECTION),
+		@InjectLink(resource = FavsResource.class, style = Style.ABSOLUTE, rel = "self edit", title = "Fav", type = MediaType.HOBBYLIST_API_FAVS, method = "getFav", bindings = @Binding(name = "favid", value = "${instance.favid}")) })
 	private List<Link> links;
 	private int favid;
 	private int gameid;
