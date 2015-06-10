@@ -147,6 +147,7 @@ public class UserResource {
 					user.setPassword(rs.getString("userpass"));
 				user.setEmail(rs.getString("email"));
 				user.setName(rs.getString("name"));
+				user.setRolename(rs.getString("rolename"));
 			} else
 				throw new NotFoundException(username + " not found.");
 		} catch (SQLException e) {

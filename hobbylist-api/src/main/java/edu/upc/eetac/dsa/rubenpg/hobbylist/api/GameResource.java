@@ -31,9 +31,7 @@ import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.GameCollection;
 public class GameResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
-	//private String GET_GAMES_QUERY = "select * from games order by creation_timestamp";
 	private String GET_GAMES_QUERY = "select games.gameid, games.username, games.title, games.synopsis, games.company, games.year, games.imageurl, games.creation_timestamp, genre.genrename from games inner join genre on games.genreid=genre.genreid";
-	//private String GET_PLATFORM_QUERY = "select platforms.platformname,platforms.platformid from platforms where platforms.platformid=platformsgames.platformid AND platformsgames.gameid=games.gameid";
 	@GET
 	@Produces(MediaType.HOBBYLIST_API_GAME_COLLECTION)
 	public GameCollection getGames() {
@@ -48,13 +46,10 @@ public class GameResource {
 		}
 		
 		PreparedStatement stmt = null;
-		//PreparedStatement stmt2 = null;
 		try {	
 			stmt = conn.prepareStatement(GET_GAMES_QUERY);
-			//stmt2 = conn.prepareStatement(GET_PLATFORM_QUERY);
 			
 			ResultSet rs = stmt.executeQuery();
-			//ResultSet rs2 = stmt2.executeQuery();
 			while (rs.next()) {
 				Game game = new Game();
 				game.setGameid(rs.getInt("gameid"));
@@ -66,10 +61,8 @@ public class GameResource {
 				game.setYear(rs.getString("year"));
 				game.setImageurl(rs.getString("imageurl"));
 				game.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());	
-				//rs2.next();
-				//game.setPlatformname(rs2.getString("platformname"));
-				games.addGame(game);			
-			}	
+				games.addGame(game);
+			}				
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
