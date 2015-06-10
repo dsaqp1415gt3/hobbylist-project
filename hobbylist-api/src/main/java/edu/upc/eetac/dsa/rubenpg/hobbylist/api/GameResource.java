@@ -277,7 +277,7 @@ public class GameResource {
 		return games;
 	}
 	
-	private String INSERT_GAME_QUERY = "insert into games (username, title, synopsis, genreid, platformid, company, year, imageurl) values (?, ?, ?, ?, ?, ?, ?, ?)";
+	private String INSERT_GAME_QUERY = "insert into games (username, title, synopsis, genreid, company, year, imageurl) values (?, ?, ?, ?, ?, ?, ?)";
 	@POST
 	@Consumes(MediaType.HOBBYLIST_API_GAME)
 	@Produces(MediaType.HOBBYLIST_API_GAME)
@@ -362,7 +362,7 @@ public class GameResource {
 		}
 	}
 	
-	private String UPDATE_GAME_QUERY = "update games set username =ifnull(?, username), title=ifnull(?, title), synopsis=ifnull(?, synopsis), genreid=ifnull(?, genreid), platformid=ifnull(?, platformid), company=ifnull(?, company), year=ifnull(?, year), imageurl=ifnull(?, imageurl) where gameid=?";
+	private String UPDATE_GAME_QUERY = "update games set username =ifnull(?, username), title=ifnull(?, title), synopsis=ifnull(?, synopsis), genreid=ifnull(?, genreid), company=ifnull(?, company), year=ifnull(?, year), imageurl=ifnull(?, imageurl) where gameid=?";
 	 
 	@PUT
 	@Path("/{gameid}")
