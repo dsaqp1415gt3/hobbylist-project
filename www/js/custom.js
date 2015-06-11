@@ -12,7 +12,7 @@
 	});
 
 
-	//jQuery for page scrolling feature - requires jQuery Easing plugin
+	/*//jQuery for page scrolling feature - requires jQuery Easing plugin
 	$(function() {
 		$('.navbar-nav li a').bind('click', function(event) {
 			var $anchor = $(this);
@@ -28,7 +28,7 @@
 			}, 1500, 'easeInOutExpo');
 			event.preventDefault();
 		});
-	});
+	});*/
 	
 	//owl carousel
 	$('#owl-works').owlCarousel({
