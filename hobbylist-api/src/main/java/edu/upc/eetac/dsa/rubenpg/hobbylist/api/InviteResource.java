@@ -27,11 +27,12 @@ import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.InviteCollection;
 public class InviteResource {
 private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
-	private String GET_INVITES_QUERY = "select * from invites where stateid = 3 order by creationTimestamp";
+	private String GET_INVITES_QUERY = "select * from invites where stateid = 3 AND receiver like ?";
 
 	@GET
+	@Path("/users/{username}")
 	@Produces(MediaType.HOBBYLIST_API_INVITE_COLLECTION)
-	public InviteCollection getInvites(@QueryParam("inviteid") String inviteid) {
+	public InviteCollection getInvites(@QueryParam("inviteid") String inviteid, @PathParam("username") String username) {
 		InviteCollection invites = new InviteCollection();
 	 
 		Connection conn = null;	
@@ -45,7 +46,8 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		PreparedStatement stmt = null;
 		try {				
 			stmt = conn.prepareStatement(GET_INVITES_QUERY);
-						
+			stmt.setString(1, "%" + username + "%");
+			
 			ResultSet rs = stmt.executeQuery();			
 			while (rs.next()) {
 				Invite invite = new Invite();

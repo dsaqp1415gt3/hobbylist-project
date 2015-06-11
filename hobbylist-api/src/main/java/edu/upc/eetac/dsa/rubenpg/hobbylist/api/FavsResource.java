@@ -130,7 +130,7 @@ public class FavsResource {
 		return fav;
 	}
 
-	private String INSERT_FAV_QUERY = "insert into favs (gameid, username, rank) values (?, ?, ?)";
+	private String INSERT_FAV_QUERY = "insert into favs (gameid, username, rank) values (?, ?, 0)";
 	 
 	@POST
 	@Consumes(MediaType.HOBBYLIST_API_FAVS)
@@ -151,7 +151,6 @@ public class FavsResource {
 					Statement.RETURN_GENERATED_KEYS);	 
 			stmt.setInt(1, fav.getGameid());
 			stmt.setString(2, security.getUserPrincipal().getName());
-			stmt.setInt(3, fav.getRank());
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
