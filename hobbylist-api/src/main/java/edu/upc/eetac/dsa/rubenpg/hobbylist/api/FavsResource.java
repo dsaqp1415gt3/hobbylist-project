@@ -31,7 +31,6 @@ public class FavsResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
 	private String GET_FAVS_BY_USER_QUERY = "select * from games h, favs l where h.gameid = l.gameid AND l.username like ?";
-	
 	@GET
 	@Path("/users/{username}")
 	@Produces(MediaType.HOBBYLIST_API_FAVS_COLLECTION)
@@ -66,6 +65,7 @@ public class FavsResource {
 				fav.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
 				favs.addFav(fav);
 			}		
+			
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);

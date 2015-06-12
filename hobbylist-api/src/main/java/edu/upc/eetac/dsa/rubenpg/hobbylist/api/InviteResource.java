@@ -167,7 +167,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		return invite;
 	}
 	
-	private String UPDATE_INVITE_QUERY = "update invites set stateid=ifnull(?, statid)";
+	private String UPDATE_INVITE_QUERY = "update invites set stateid=ifnull(?, stateid) where invid=?";
 	 
 	@PUT
 	@Path("/{invid}")
@@ -183,6 +183,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		}
 	 
 		PreparedStatement stmt = null;
+		
 		try {
 			stmt = conn.prepareStatement(UPDATE_INVITE_QUERY);
 			stmt.setInt(1, invite.getStateid());

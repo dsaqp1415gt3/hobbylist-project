@@ -28,6 +28,7 @@ public class Fav {
 	private String imageurl;
 	private int rank;	
 	private long creationTimestamp;
+	private List<Platformgame> platformsgames;
 	
 	public List<Link> getLinks() {
 		return links;
@@ -100,5 +101,12 @@ public class Fav {
 	}
 	public void setCreationTimestamp(long creationTimestamp) {
 		this.creationTimestamp = creationTimestamp;
+	}
+	public List<Platformgame> getPlatformsgames() {
+		return platformsgames;
+	}
+
+	public void setPlatformsgames(List<Platformgame> platformsgames) {
+		this.platformsgames = platformsgames;
 	}
 }

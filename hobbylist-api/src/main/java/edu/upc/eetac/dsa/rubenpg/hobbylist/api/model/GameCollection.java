@@ -1,6 +1,7 @@
 package edu.upc.eetac.dsa.rubenpg.hobbylist.api.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ws.rs.core.Link;
@@ -43,4 +44,16 @@ public class GameCollection {
 		this.links = links;
 	}
 
+	public Game getGamebyId(int gameid) {
+		Game game;
+		Iterator iterator = games.iterator();
+		while (iterator.hasNext()) {
+			game = (Game) iterator.next();
+			if (gameid == game.getGameid()) {
+				return game;
+			}
+		}
+		return null;
+	}
+	
 }
