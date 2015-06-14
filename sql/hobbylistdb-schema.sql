@@ -74,14 +74,3 @@ create table invites (
 	foreign key (gameid) 	references games(gameid),
 	foreign key(stateid)	references state(stateid)
 );
-
-create table messages (
-	messageid				int not null primary key auto_increment,
-	sender					varchar(20) not null,
-	receiver				varchar(20) not null,
-	subject					varchar(100) not null,
-	content					varchar(500) not null,	
-	creation_timestamp		datetime not null default current_timestamp,
-	foreign key(sender)		references users(username),
-	foreign key(receiver)	references users(username)
-);

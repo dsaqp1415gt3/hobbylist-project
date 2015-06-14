@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 import javax.sql.DataSource;
 import javax.ws.rs.BadRequestException;
@@ -26,7 +25,6 @@ import javax.ws.rs.core.SecurityContext;
 
 import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.Game;
 import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.GameCollection;
-import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.Platformgame;
 
  
 @Path("/games")
@@ -34,7 +32,6 @@ public class GameResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
 	private String GET_GAMES_QUERY = "select games.gameid, games.username, games.title, games.synopsis, games.company, games.year, games.imageurl, games.creation_timestamp, genre.genrename from games inner join genre on games.genreid=genre.genreid";
-	private String GET_PLATFORMS_QUERY = "select platforms.platformname,platformsgames.platformid,games.gameid from platforms inner join platformsgames on platformsgames.platformid=platforms.platformid inner join games on games.gameid=platformsgames.gameid";
 	@GET
 	@Produces(MediaType.HOBBYLIST_API_GAME_COLLECTION)
 	public GameCollection getGames() {
@@ -49,10 +46,9 @@ public class GameResource {
 		}
 		
 		PreparedStatement stmt = null;
-		PreparedStatement stmt2 = null;
 		try {	
 			stmt = conn.prepareStatement(GET_GAMES_QUERY);
-			stmt2 = conn.prepareStatement(GET_PLATFORMS_QUERY);
+			
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Game game = new Game();
@@ -66,21 +62,7 @@ public class GameResource {
 				game.setImageurl(rs.getString("imageurl"));
 				game.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());	
 				games.addGame(game);
-			}		
-			
-			ResultSet rs2 = stmt2.executeQuery();
-			while (rs2.next()) {
-				Platformgame platform = new Platformgame();
-				platform.setPlatformid(rs2.getInt("platformid"));
-				platform.setPlatformname(rs2.getString("platformname"));
-				platform.setGameid(rs2.getInt("gameid"));
-				
-				int idgame = rs2.getInt("gameid");
-				Game game = games.getGamebyId(idgame);
-				List<Platformgame> platforms = game.getPlatformsgames();
-				platforms.add(platform);
-			}
-			
+			}				
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
@@ -96,8 +78,8 @@ public class GameResource {
 		return games;
 	}
 
-	private String GET_GAME_BY_ID_QUERY = "select games.gameid, games.username, games.title, games.synopsis, games.company, games.year, games.imageurl, games.creation_timestamp, genre.genrename from games inner join genre on games.genreid=genre.genreid where games.gameid=?";
-	private String GET_PLATFORMS_BY_ID_QUERY = "select platforms.platformname,platformsgames.platformid,games.gameid from platforms inner join platformsgames on platformsgames.platformid=platforms.platformid inner join games on games.gameid=platformsgames.gameid where games.gameid=?"; 
+	private String GET_GAME_BY_ID_QUERY = "select games.gameid, games.username, games.title, games.synopsis, games.company, games.year,games.genreid, games.imageurl, games.creation_timestamp, genre.genrename from games inner join genre on games.genreid=genre.genreid where games.gameid=?";
+	 
 	@GET
 	@Path("/{gameid}")
 	@Produces(MediaType.HOBBYLIST_API_GAME)
@@ -112,14 +94,11 @@ public class GameResource {
 					Response.Status.SERVICE_UNAVAILABLE);
 		}
 		
-		PreparedStatement stmt = null;	
-		PreparedStatement stmt2 = null;			
+		PreparedStatement stmt = null;				
 		try {				
 			stmt = conn.prepareStatement(GET_GAME_BY_ID_QUERY);
 			stmt.setInt(1, Integer.valueOf(gameid));
-
-			stmt2 = conn.prepareStatement(GET_PLATFORMS_BY_ID_QUERY);
-			stmt2.setInt(1, Integer.valueOf(gameid));
+			
 			ResultSet rs = stmt.executeQuery();			
 			while (rs.next()) {
 				game.setGameid(rs.getInt("gameid"));
@@ -132,16 +111,6 @@ public class GameResource {
 				game.setImageurl(rs.getString("imageurl"));
 				game.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
 			}		
-			ResultSet rs2 = stmt2.executeQuery();
-			while (rs2.next()) {
-				Platformgame platform = new Platformgame();
-				platform.setPlatformid(rs2.getInt("platformid"));
-				platform.setPlatformname(rs2.getString("platformname"));
-				platform.setGameid(rs2.getInt("gameid"));
-				
-				List<Platformgame> platforms = game.getPlatformsgames();
-				platforms.add(platform);
-			}
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
@@ -177,6 +146,7 @@ public class GameResource {
 		try {				
 			stmt = conn.prepareStatement(GET_GAME_BY_TITLE_QUERY);
 			stmt.setString(1, "%" + title + "%");
+			
 			ResultSet rs = stmt.executeQuery();			
 			while (rs.next()) {
 				Game game = new Game();
@@ -444,7 +414,7 @@ public class GameResource {
 	}
 	
 	private void validateGame(Game game) {
-		if (game.getUsername() == null)
+		if (security.getUserPrincipal().getName() == null)
 			throw new BadRequestException("Username can't be null.");
 		if (game.getTitle() == null)
 			throw new BadRequestException("Title can't be null.");
@@ -454,7 +424,7 @@ public class GameResource {
 			throw new BadRequestException("Company can't be null.");
 		if (game.getYear() == null)
 			throw new BadRequestException("Year can't be null.");
-		if (game.getUsername().length() > 20)
+		if (security.getUserPrincipal().getName().length() > 20)
 			throw new BadRequestException("Username can't be greater than 20 characters.");
 		if (game.getTitle().length() > 100)
 			throw new BadRequestException("Title can't be greater than 100 characters.");
@@ -509,6 +479,7 @@ public class GameResource {
 				game.setSynopsis(rs.getString("synopsis"));
 				game.setGenrename(rs.getString("genrename"));
 				game.setCompany(rs.getString("company"));
+				game.setGenreid(rs.getInt("genreid"));
 				game.setYear(rs.getString("year"));
 				game.setImageurl(rs.getString("imageurl"));
 				game.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());

@@ -1,7 +1,5 @@
 package edu.upc.eetac.dsa.rubenpg.hobbylist.api.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.ws.rs.core.Link;
@@ -29,13 +27,7 @@ public class Game {
 	private String year;	
 	private String imageurl;
 	private long creationTimestamp;
-	private List<Platformgame> platformsgames;
  
-	public Game() {
-		super();
-		platformsgames = new ArrayList<>();
-	}
-	
 	public int getGameid() {
 		return gameid;
 	}
@@ -123,14 +115,5 @@ public class Game {
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
-
-	public List<Platformgame> getPlatformsgames() {
-		return platformsgames;
-	}
-
-	public void setPlatformsgames(List<Platformgame> platformsgames) {
-		this.platformsgames = platformsgames;
-	}
-	
 	
 }

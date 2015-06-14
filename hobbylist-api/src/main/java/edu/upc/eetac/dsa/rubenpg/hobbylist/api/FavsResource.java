@@ -30,7 +30,8 @@ import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.FavCollection;
 public class FavsResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
-	private String GET_FAVS_BY_USER_QUERY = "select * from games h, favs l where h.gameid = l.gameid AND l.username like ?";
+	private String GET_FAVS_BY_USER_QUERY = "select * from games h, favs l where h.gameid = l.gameid AND l.username = ?";
+	
 	@GET
 	@Path("/users/{username}")
 	@Produces(MediaType.HOBBYLIST_API_FAVS_COLLECTION)
@@ -48,16 +49,17 @@ public class FavsResource {
 		PreparedStatement stmt = null;
 		try {	
 			stmt = conn.prepareStatement(GET_FAVS_BY_USER_QUERY);
-			stmt.setString(1, "%" + username + "%");
+			stmt.setString(1, username);
 			
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Fav fav = new Fav();
 				fav.setGameid(rs.getInt("gameid"));
-				fav.setUsername(rs.getString("username"));
+				fav.setUsername(rs.getString(12));				
 				fav.setTitle(rs.getString("title"));
 				fav.setSynopsis(rs.getString("synopsis"));
 				fav.setGenreid(rs.getInt("genreid"));
+				fav.setFavid(rs.getInt("favid"));
 				fav.setCompany(rs.getString("company"));
 				fav.setYear(rs.getString("year"));
 				fav.setImageurl(rs.getString("imageurl"));
@@ -65,7 +67,6 @@ public class FavsResource {
 				fav.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
 				favs.addFav(fav);
 			}		
-			
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
@@ -105,6 +106,7 @@ public class FavsResource {
 			ResultSet rs = stmt.executeQuery();			
 			while (rs.next()) {
 				fav.setGameid(rs.getInt("gameid"));
+				fav.setFavid(rs.getInt("favid"));
 				fav.setUsername(rs.getString("username"));
 				fav.setTitle(rs.getString("title"));
 				fav.setSynopsis(rs.getString("synopsis"));
@@ -130,13 +132,65 @@ public class FavsResource {
 		return fav;
 	}
 
+	/*private String INSERT_FAV_QUERY = "insert into favs (gameid, username, rank) values (?, ?, ?)";
+	 
+	@POST
+	@Consumes(MediaType.HOBBYLIST_API_FAVS)
+	@Produces(MediaType.HOBBYLIST_API_FAVS)
+	public Fav createFav(Fav fav) {
+		System.out.println(fav);
+
+		validateFav(fav);
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServerErrorException("Could not connect to the database",
+					Response.Status.SERVICE_UNAVAILABLE);
+		}
+	 
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(INSERT_FAV_QUERY,
+					Statement.RETURN_GENERATED_KEYS);	 
+			stmt.setInt(1, fav.getGameid());
+			stmt.setString(2, security.getUserPrincipal().getName());
+			stmt.setInt(3, fav.getRank());
+			stmt.executeUpdate();
+			System.out.println(stmt);
+			ResultSet rs = stmt.getGeneratedKeys();
+			if (rs.next()) {
+				int favid = rs.getInt(1);
+				System.out.println(favid);
+				fav = getFavFromDatabase(Integer.toString(favid));
+			} else {
+				// Something has failed...
+			}
+		} catch (SQLException e) {
+			throw new ServerErrorException(e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println(e);
+			}
+		}
+	 
+		return fav;
+	}
+	*/
+	
 	private String INSERT_FAV_QUERY = "insert into favs (gameid, username, rank) values (?, ?, 0)";
 	 
 	@POST
 	@Consumes(MediaType.HOBBYLIST_API_FAVS)
 	@Produces(MediaType.HOBBYLIST_API_FAVS)
 	public Fav createFav(Fav fav) {
-		validateFav(fav);
+		System.out.println(security.getUserPrincipal().getName());
+		//validateFav(fav);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -157,10 +211,13 @@ public class FavsResource {
 				int favid = rs.getInt(1);
 	 
 				fav = getFavFromDatabase(Integer.toString(favid));
-			} else {
+			} else {		System.out.println(security.getUserPrincipal().getName());
+
 				// Something has failed...
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
+
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
 		} finally {
@@ -174,7 +231,6 @@ public class FavsResource {
 	 
 		return fav;
 	}
-	
 	private String DELETE_FAV_QUERY = "delete from favs where favid=?";
 	 
 	@DELETE
@@ -199,6 +255,7 @@ public class FavsResource {
 				throw new NotFoundException("There's no fav with favid="
 						+ favid);
 		} catch (SQLException e) {
+			System.out.println(e);
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
 		} finally {
@@ -289,12 +346,13 @@ public class FavsResource {
 			if (rs.next()) {
 				fav.setFavid(rs.getInt("favid"));
 				fav.setGameid(rs.getInt("gameid"));
-				fav.setUsername(rs.getString("username"));
+				fav.setUsername(rs.getString(12));
 				fav.setRank(rs.getInt("rank"));
 			} else {
 				throw new NotFoundException("There's no fav with favid="+ favid);
 				}
 		} catch (SQLException e) {
+			System.out.println(e);
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
 		} finally {
@@ -312,6 +370,9 @@ public class FavsResource {
 	private void validateUser(String favid) {
 	    Fav fav = getFavFromDatabase(favid);
 	    String username = fav.getUsername();
+	    System.out.println(username);
+	    System.out.println(security.getUserPrincipal().getName());
+	    
 		if (!security.getUserPrincipal().getName().equals(username))
 			throw new ForbiddenException(
 					"You are not allowed to modify this fav.");

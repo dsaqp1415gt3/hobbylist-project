@@ -701,4 +701,101 @@ a.btn:hover {
 		font-size: 20px;
 	}
 	
+    
+}
+
+.addfav { 
+  color: #FFFFFF; 
+  background-color: #3A82D4; 
+  border-color: #000000; 
+} 
+ 
+.addfav:hover, 
+.addfav:focus, 
+.addfav:active, 
+.addfav.active, 
+.open .dropdown-toggle.addfav { 
+  color: #FFFFFF; 
+  background-color: #696969; 
+  border-color: #000000; 
+} 
+ 
+.addfav:active, 
+.addfav.active, 
+.open .dropdown-toggle.addfav { 
+  background-image: none; 
+} 
+ 
+.addfav.disabled, 
+.addfav[disabled], 
+fieldset[disabled] .addfav, 
+.addfav.disabled:hover, 
+.addfav[disabled]:hover, 
+fieldset[disabled] .addfav:hover, 
+.addfav.disabled:focus, 
+.addfav[disabled]:focus, 
+fieldset[disabled] .addfav:focus, 
+.addfav.disabled:active, 
+.addfav[disabled]:active, 
+fieldset[disabled] .addfav:active, 
+.addfav.disabled.active, 
+.addfav[disabled].active, 
+fieldset[disabled] .addfav.active { 
+  background-color: #3A82D4; 
+  border-color: #000000; 
+} 
+ 
+.addGame .badge { 
+  color: #3A82D4; 
+  background-color: #FFFFFF; 
+}
+
+.table tbody>tr>td{
+    vertical-align: middle;
+}
+
+.addGame { 
+  color: #FFFFFF; 
+  background-color: #3A82D4; 
+  border-color: #000000; 
+} 
+ 
+.addGame:hover, 
+.addGame:focus, 
+.addGame:active, 
+.addGame.active, 
+.open .dropdown-toggle.addGame { 
+  color: #FFFFFF; 
+  background-color: #696969; 
+  border-color: #000000; 
+} 
+ 
+.addGame:active, 
+.addGame.active, 
+.open .dropdown-toggle.addGame { 
+  background-image: none; 
+} 
+ 
+.addGame.disabled, 
+.addGame[disabled], 
+fieldset[disabled] .addGame, 
+.addGame.disabled:hover, 
+.addGame[disabled]:hover, 
+fieldset[disabled] .addGame:hover, 
+.addGame.disabled:focus, 
+.addGame[disabled]:focus, 
+fieldset[disabled] .addGame:focus, 
+.addGame.disabled:active, 
+.addGame[disabled]:active, 
+fieldset[disabled] .addGame:active, 
+.addGame.disabled.active, 
+.addGame[disabled].active, 
+fieldset[disabled] .addGame.active { 
+  background-color: #3A82D4; 
+  border-color: #000000; 
+} 
+ 
+.addGame .badge { 
+  color: #3A82D4; 
+  background-color: #FFFFFF; 
 }

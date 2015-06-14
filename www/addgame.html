@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>AddGame</title>
+
+    <!-- CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="css/nivo-lightbox.css" rel="stylesheet" />
+	<link href="css/nivo-lightbox-theme/default/default.css" rel="stylesheet" type="text/css" />
+	<link href="css/owl.carousel.css" rel="stylesheet" media="screen" />
+    <link href="css/owl.theme.css" rel="stylesheet" media="screen" />	
+	<link href="css/animate.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet">
+	<link href="color/default.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom">
+	<!-- Preloader -->
+	<div id="preloader">
+	  <div id="load"></div>
+	</div>
+
+	<!-- Section: contact -->
+    <section id="contact" class="home-section text-center">
+		<div class="heading-contact">
+			<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-md-offset-2">
+					
+					<div class="section-heading">
+					<div class="wow bounceInDown" data-wow-delay="0.4s">
+					<h2>Añadir Juego</h2>
+					</div>
+					<p class="wow lightSpeedIn" data-wow-delay="0.3s">Nuevo juego en 3, 2, 1...YA!.</p>
+					</div>
+					
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class="container">
+
+    <div class="row">
+        <div class="col-lg-8 col-md-offset-2">
+            <div class="form-wrapper marginbot-50">
+                <form id="contact-form">
+                <div class="row">
+				
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="Title">
+                                Title:</label>							 
+                             <textarea name="title" id="title" class="form-control" rows="1" cols="25" required="required"
+                                placeholder="Title"></textarea>
+                        </div>
+						
+						<div class="form-group">
+                            <label for="Synopsis">
+                                Synopsis:</label>
+                             <textarea name="synopsis" id="synopsis" class="form-control" rows="1" cols="25" required="required"
+                                placeholder="Synopsis"></textarea>
+                        </div>
+                    
+                    <!--<div class="form-group">
+                            <label for="genreid">
+                                Plataforma:</label>
+                            <select id="platformid" name="genreid" class="form-control" required="required">
+                                 <option value="ps3" selected="">PS3</option>
+                                <option value="ps4">PS4</option>
+                                <option value="xbox360">Xbox 360</option>
+                                <option value="xboxone">Xbox One</option>
+                                <option value="wii u">Wii U</option>
+                                <option value="3ds">3DS</option>
+                                <option value="psvita">PS Vita</option>
+                            </select>
+                        </div>-->
+						
+						<div class="form-group">
+                            <label for="genreid">
+                                Genero:</label>
+                            <select id="genreid" name="genreid" class="form-control" required="required">
+                                <option value="shooter">Shooter</option>
+                                <option value="plataformas">Plataformas</option>
+                                <option value="rpg">RPG</option>
+                                <option value="puzle">Puzle</option>
+                                <option value="accion">Acción</option>
+                                <option value="estrategia">RTS</option>
+                                <option value="deportes">Deportes</option>
+                                <option value="conduccion">Conducción</option>
+                            </select>
+                        </div>
+						
+						<div class="form-group">
+                            <label for="Company">
+                                Company:</label>
+                             <textarea name="Compañía" id="company" class="form-control" rows="1" cols="25" required="required"
+                                placeholder="Compañía"></textarea>
+                        </div>
+						
+						<div class="form-group">
+                            <label for="Year">
+                                Year:</label>
+                             <textarea name="Year" id="year" class="form-control" rows="1" cols="25" required="required"
+                                placeholder="Year"></textarea>
+                        </div>
+						
+						<div class="form-group">
+                            <label for="Imageurl">
+                                Imageurl:</label>
+                             <textarea name="Imageurl" id="imageurl" class="form-control" rows="1" cols="25" required="required"
+                                placeholder="Imageurl"></textarea>
+						</div>
+
+                        <button type="button" class="btn btn-skin btn-block" id="btnAddgame">Añadir</button>
+       
+                    <button type="button" class="btn btn-skin btn-block" id="btnReturn">Volver a la página principal de HobbyList</button>
+                </div>
+                </form>
+				
+            </div>
+        </div>
+
+    </div>	
+
+		</div>
+	</section>
+	<!-- /Section: contact -->
+	
+	<!-- Section: about -->
+    <section id="cinelist" class="home-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+                    
+					
+						<div class="section-heading text-center">
+						<div class="wow bounceInDown" data-wow-delay="0.2s">
+							<h2></h2>
+						</div>
+						<p class="wow bounceInUp" data-wow-delay="0.3s"></p>
+                            <div id="result"> lo que sea tiene que salir aquí</div>
+						</div>
+					
+				</div>
+                
+			</div>
+		</div>
+	</section>
+
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-lg-12">
+					<p>&copy;Copyright 2015 . Marc Pallejà & Rubén Pérez . design by <a href="">Bootstraptaste, Universitat Politècnica de Catalunya (UPC) - Escola d'Enginyeria de Telecomunicació i Aeroespacial de Castelldefels (EETAC)</a></p>
+				</div>
+			</div>	
+		</div>
+	</footer>
+
+    <!-- Core JavaScript Files -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>	
+	<script src="js/jquery.sticky.js"></script>
+	<script src="js/jquery.scrollTo.js"></script>
+	<script src="js/stellar.js"></script>
+	<script src="js/wow.min.js"></script>
+	<script src="js/owl.carousel.min.js"></script>
+	<script src="js/nivo-lightbox.min.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="js/custom.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/addgame.js"></script>
+
+</body>
+
+</html>

@@ -36,63 +36,10 @@
 		</div>
     </section>
 	<!-- /Section: intro -->
+	
     <!-- Navigation -->
-    <div id="navigation">
+     <div id="navigation">
         <nav class="navbar navbar-custom" role="navigation">
-                              <div class="container">
-                                    <div class="row">
-                                          <div class="col-md-22">
-                         
-                                          <!-- Brand and toggle get grouped for better mobile display -->
-                                          <div class="navbar-header">
-                                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
-                                                <i class="fa fa-bars"></i>
-                                                </button>
-                                          </div>
-                                                      <!-- Collect the nav links, forms, and other content for toggling -->
-                                            <div class="collapse navbar-collapse" id="menu">
-                                                <ul class="nav navbar-nav navbar-left">
-													<li><a href="#gamelistlogo" class="fa fa-arrow-up"></a></li>
-                                                    <li><a href="index.html">VIDEOJUEGOS</a></li>
-                                                    <li id="Favs"><a href="favs.html">FAVORITOS</a></li>
-                                                    <li><a id="Salir" href="buscar.html"></a></li>
-                                                    <li><a>PLATAFORMA:</a> <li><select id="plataforma" name="subject" class="form-control" required="required"></li>
-                                                    <option value="ps3" selected="">PS3</option>
-                                                    <option value="ps4">PS4</option>
-                                                    <option value="xbox360">Xbox 360</option>
-                                                    <option value="xboxone">Xbox One</option>
-                                                    <option value="wii u">Wii U</option>
-                                                    <option value="3ds">3DS</option>
-                                                    <option value="psvita">PS Vita</option>
-                                                                                                                
-
-                                                        </select></li>
-                                              <li><a>GÉNERO:</a> <li><select id="genero" name="subject" class="form-control" required="required"></li>
-                                                    <option value="shooter">Shooter</option>
-                                                    <option value="plataformas">Plataformas</option>
-                                                    <option value="rpg">RPG</option>
-                                                    <option value="puzle">Puzle</option>
-                                                    <option value="accion">Acción</option>
-                                                    <option value="estrategia">RTS</option>
-                                                    <option value="deportes">Deportes</option>
-                                                    <option value="conduccion">Conducción</option>
-                                                                                                                
-
-                                                        </select></li>
-                                                </ul>
-                                                <ul class="nav navbar-nav navbar-right">
-                                                    <li style="padding: 10px 15px;"><input style="width: 156px;" id="buscar" type="text" placeholder="Buscar por título"></li>
-                                                    <li id="user"></li>
-                                                </ul>
-                                            </div>
-                                                      <!-- /.Navbar-collapse -->
-                             
-                                          </div>
-                                    </div>
-                              </div>
-                              <!-- /.container -->
-                        </nav>
-		<nav class="navbar2 navbar2-custom" role="adminnavigation">
                               <div class="container">
                                     <div class="row">
                                           <div class="col-md-12">
@@ -104,7 +51,20 @@
                                                 </button>
                                           </div>
                                                       <!-- Collect the nav links, forms, and other content for toggling -->
-
+                                            <div class="collapse navbar-collapse" id="menu">
+                                                <ul class="nav navbar-nav navbar">
+													<li><a href="#gamelistlogo" class="fa fa-arrow-up"></a></li>
+                                                    <li><a href="index.html">TODOS LOS VIDEOJUEGOS</a></li>
+                                                    <li><a id="Salir" href="buscar.html"></a></li>
+                                               
+                                            </div>
+                                                      <!-- /.Navbar-collapse -->
+                             
+                                          </div>
+                                    </div>
+                              </div>
+                              <!-- /.container -->
+                        </nav>
                                                       <!-- /.Navbar-collapse -->
                              
                                           </div>
@@ -140,19 +100,16 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-8 col-lg-offset-2">
-                    
 					
-						<div class="section-heading">
-						<div style="float:left; "class="wow bounceInDown" data-wow-delay="0.2s">
+						<div class="section-heading text-center">
+						<div class="wow bounceInDown" data-wow-delay="0.2s">
 							<h2>Lista (Videojuegos)</h2>
 						</div>
-                            <div style="float:right;" ><a href="addgame.html" style=" margin-top:-77px;" class="">Añadir Videojuegos</a></div>
 						<p class="wow bounceInUp" data-wow-delay="0.3s"></p>
-                            <div id="result"> lo que sea tiene que salir aquí</div>
+                            <div id="result"> </div>
 						</div>
 					
 				</div>
-                
 			</div>
 		</div>
 	</section>
@@ -209,8 +166,7 @@
       <!-- Event and AJAX functions -->
 	  <script type="text/javascript" src="js/weblinking.js"></script>
     <script src="js/jquery.cookie.js"></script>
-      <script type="text/javascript" src="js/hobbylist.js"></script>
-      <script type="text/javascript" src="js/addfavs.js"></script>
+      <script type="text/javascript" src="js/favs.js"></script>
 
 </body>
 

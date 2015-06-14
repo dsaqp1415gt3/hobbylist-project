@@ -1,7 +1,7 @@
 source hobbylistdb-schema.sql;
 
 insert into users values('ruben', MD5('ruben'), 'Ruben', 'ruben@acme.com');
-insert into user_roles values ('ruben', 'admin');
+insert into user_roles values ('ruben', 'registered');
 
 insert into users values('marc', MD5('marc'), 'Marc', 'marc@acme.com');
 insert into user_roles values ('marc', 'registered');
@@ -64,9 +64,3 @@ insert into favs (gameid, username, rank) values (6, 'marc', 7);
 insert into state (statename) values ('accepted');
 insert into state (statename) values ('reject');
 insert into state (statename) values ('pendent');
-
-insert into messages (sender, receiver, subject, content) values ('ruben', 'marc', 'hola', 'que tal');
-insert into messages (sender, receiver, subject, content) values ('ruben', 'marc', 'blabla', 'me comi a mi gemelo en el utero');
-insert into messages (sender, receiver, subject, content) values ('ruben', 'marc', 'hola', 'caracola');
-insert into messages (sender, receiver, subject, content) values ('ruben', 'marc', 'lerele', 'yippee ki yay');
-insert into messages (sender, receiver, subject, content) values ('marc', 'ruben', 'hola', 'la vaca hace muuuuu');

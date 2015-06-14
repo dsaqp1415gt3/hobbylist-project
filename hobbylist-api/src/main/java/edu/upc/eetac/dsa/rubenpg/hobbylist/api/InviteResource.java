@@ -27,12 +27,11 @@ import edu.upc.eetac.dsa.rubenpg.hobbylist.api.model.InviteCollection;
 public class InviteResource {
 private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
-	private String GET_INVITES_QUERY = "select * from invites where stateid = 3 AND receiver like ?";
+	private String GET_INVITES_QUERY = "select * from invites where stateid = 3 order by creationTimestamp";
 
 	@GET
-	@Path("/users/{username}")
 	@Produces(MediaType.HOBBYLIST_API_INVITE_COLLECTION)
-	public InviteCollection getInvites(@QueryParam("inviteid") String inviteid, @PathParam("username") String username) {
+	public InviteCollection getInvites(@QueryParam("inviteid") String inviteid) {
 		InviteCollection invites = new InviteCollection();
 	 
 		Connection conn = null;	
@@ -46,8 +45,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		PreparedStatement stmt = null;
 		try {				
 			stmt = conn.prepareStatement(GET_INVITES_QUERY);
-			stmt.setString(1, "%" + username + "%");
-			
+						
 			ResultSet rs = stmt.executeQuery();			
 			while (rs.next()) {
 				Invite invite = new Invite();
@@ -74,12 +72,13 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		return invites;
 	}
 
-	private String GET_INVITE_BY_ID_QUERY = "select * from invites where invid=?";
+	private String GET_INVITE_BY_ID_QUERY = "select * from invites where receiver=?";
+	private String GET_INVITE_BY_IDD_QUERY = "select * from invites where invid=?";
 	 
 	@GET
-	@Path("/{invid}")
+	@Path("/{receiver}")
 	@Produces(MediaType.HOBBYLIST_API_INVITE)
-	public Invite getInvite(@PathParam("invid") String invid) {
+	public Invite getInvite(@PathParam("receiver") String receiver) {
 		Invite invite = new Invite();
 		
 		Connection conn = null;
@@ -93,7 +92,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		PreparedStatement stmt = null;				
 		try {				
 			stmt = conn.prepareStatement(GET_INVITE_BY_ID_QUERY);
-			stmt.setInt(1, Integer.valueOf(invid));
+			stmt.setString(1, receiver);
 			
 			ResultSet rs = stmt.executeQuery();			
 			while (rs.next()) {
@@ -167,7 +166,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		return invite;
 	}
 	
-	private String UPDATE_INVITE_QUERY = "update invites set stateid=ifnull(?, stateid) where invid=?";
+	private String UPDATE_INVITE_QUERY = "update invites set stateid=ifnull(?, stateid)";
 	 
 	@PUT
 	@Path("/{invid}")
@@ -183,20 +182,15 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		}
 	 
 		PreparedStatement stmt = null;
-		
 		try {
 			stmt = conn.prepareStatement(UPDATE_INVITE_QUERY);
 			stmt.setInt(1, invite.getStateid());
-			stmt.setInt(2, Integer.valueOf(invid));
 	 
-			int rows = stmt.executeUpdate();
-			if (rows == 1)
-				invite = getInviteFromDatabase(invid);
-			else {
-				throw new NotFoundException("There's no invite with invid=" + invid);
-			}
+
+			invite = getInviteFromDatabase(invid);
 	 
 		} catch (SQLException e) {
+			System.out.println(e);
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);
 		} finally {
@@ -235,7 +229,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	 
 		PreparedStatement stmt = null;
 		try {
-			stmt = conn.prepareStatement(GET_INVITE_BY_ID_QUERY);
+			stmt = conn.prepareStatement(GET_INVITE_BY_IDD_QUERY);
 			stmt.setInt(1, Integer.valueOf(invid));
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
@@ -246,7 +240,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 				invite.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
 			} else {
 				throw new NotFoundException("There's no invite with invid="+ invid);
-				}
+			}
 		} catch (SQLException e) {
 			throw new ServerErrorException(e.getMessage(),
 					Response.Status.INTERNAL_SERVER_ERROR);

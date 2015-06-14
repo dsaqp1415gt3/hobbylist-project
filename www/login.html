@@ -19,7 +19,10 @@
 	<link href="css/animate.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet">
 	<link href="color/default.css" rel="stylesheet">
+    <script>
 
+
+    </script>
 </head>
 
 <body id="page-top" data-spy="scroll" data-target=".navbar-custom">
@@ -32,7 +35,7 @@
     <section id="intro" class="intro">
 	
 		<div class="slogan">
-			<a href="index.html"><img src="img/logo.png" alt="" /></a>
+			<a href="index.html"><img src="img/HobbyList_logo.jpg" alt="" /></a>
 		</div>
     </section>
 	<!-- /Section: intro -->
@@ -43,7 +46,6 @@
     <div class="row">
         <div class="col-lg-8 col-md-offset-2">
             <div class="form-wrapper marginbot-50">
-                <form id="contact-form">
                 <div class="row">
     
                         <div class="form-group">
@@ -57,12 +59,13 @@
                                 Password</label>
                                 <input type="password" class="form-control" id="password" placeholder="Enter password" required="required" />
                         </div>
+                    <div id="result"> </div>
 
-                        <button type="submit" class="btn btn-skin btn-block" id="btnContactUs">Login</button>
-						<button type="submit" class="btn btn-skin btn-block" id="btnContactUs">Register</button>
+                        <button type="submit" class="btn btn-skin btn-block" id="btnLogin">Login</button>
+						<button type="submit" class="btn btn-skin btn-block" id="btnRegister">Register</button>
+                    <button type="submit" class="btn btn-skin btn-block" id="btnEntrar">Entrar (sin registrar o logearse)</button>
        
                 </div>
-                </form>
 				
             </div>
         </div>
@@ -77,7 +80,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12 col-lg-12">
-					<p>&copy;Copyright 2015 . Ruben Perez . design by <a href="">Bootstraptaste</a></p>
+					<p>&copy;Copyright 2015 . Marc Pallejà & Rubén Pérez . design by <a href="">Bootstraptaste, Universitat Politècnica de Catalunya (UPC) - Escola d'Enginyeria de Telecomunicació i Aeroespacial de Castelldefels (EETAC)</a></p>
 				</div>
 			</div>	
 		</div>
@@ -85,9 +88,11 @@
 
     <!-- Core JavaScript Files -->
     <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.easing.min.js"></script>	
 	<script src="js/jquery.sticky.js"></script>
+    <script src="js/jquery.cookie.js"></script>
 	<script src="js/jquery.scrollTo.js"></script>
 	<script src="js/stellar.js"></script>
 	<script src="js/wow.min.js"></script>
@@ -95,6 +100,8 @@
 	<script src="js/nivo-lightbox.min.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.js"></script>
+     <!-- Event and AJAX functions -->
+	  <script type="text/javascript" src="js/login.js"></script>
 
 </body>
 
